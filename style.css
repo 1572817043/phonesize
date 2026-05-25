@@ -1,0 +1,798 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ===== 校准弹窗 ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.modal h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.modal-desc {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* 步骤切换 */
+.step {
+  display: none;
+}
+
+.step.active {
+  display: block;
+}
+
+.step-choices {
+  display: flex;
+  gap: 16px;
+}
+
+.choice-btn {
+  flex: 1;
+  padding: 20px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.choice-btn:hover {
+  border-color: #4361ee;
+  background: #f8f9ff;
+}
+
+.choice-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.choice-desc {
+  display: block;
+  font-size: 12px;
+  color: #999;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.btn-back:hover {
+  color: #4361ee;
+}
+
+.calibration-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  border-color: #4361ee;
+  color: #4361ee;
+  background: #f0f4ff;
+}
+
+.tab-btn:hover:not(.active) {
+  border-color: #bbb;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* 屏幕尺寸输入 */
+.screen-size-input label {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 18px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #4361ee;
+}
+
+.input-unit {
+  font-size: 16px;
+  color: #666;
+}
+
+.input-hint {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+/* 银行卡校准 */
+.calibrate-hint {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.card-preview {
+  width: 300px;
+  height: 189px;
+  border: 2px dashed #4361ee;
+  border-radius: 12px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4361ee;
+  font-size: 14px;
+  background: #f8f9ff;
+  transition: width 0.05s, height 0.05s;
+}
+
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.slider-group input[type="range"] {
+  flex: 1;
+  accent-color: #4361ee;
+}
+
+.slider-value {
+  font-size: 13px;
+  color: #666;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* 按钮 */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #4361ee;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #3451de;
+}
+
+.btn-primary.btn-cancel {
+  background: #e74c3c;
+}
+
+.btn-primary.btn-cancel:hover {
+  background: #c0392b;
+}
+
+.btn-re.calibrate {
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #666;
+}
+
+.btn-re.calibrate:hover {
+  border-color: #4361ee;
+  color: #4361ee;
+}
+
+.btn-rotate {
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.btn-rotate:hover {
+  border-color: #4361ee;
+  color: #4361ee;
+}
+
+.btn-lang {
+  padding: 4px 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.btn-lang:hover {
+  border-color: #4361ee;
+  color: #4361ee;
+}
+
+.modal .btn-lang {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+/* ===== 主界面 ===== */
+.main-app {
+  min-height: 100vh;
+}
+
+header {
+  background: #fff;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+header h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ppi-display {
+  font-size: 14px;
+  color: #666;
+}
+
+.ppi-display strong {
+  color: #4361ee;
+}
+
+.app-body {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+/* 左侧控制面板 */
+.control-panel {
+  width: 340px;
+  background: #fff;
+  border-right: 1px solid #e8e8e8;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.control-section h3 {
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.brand-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.brand-tab {
+  padding: 5px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  background: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.brand-tab.active {
+  background: #4361ee;
+  color: #fff;
+  border-color: #4361ee;
+}
+
+.phone-list {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-bottom: 8px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+.search-input:focus {
+  border-color: #4361ee;
+}
+
+.phone-item {
+  padding: 10px 12px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phone-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-compare-add {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #4361ee;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-compare-add:hover {
+  background: #4361ee;
+  color: #fff;
+  border-color: #4361ee;
+}
+
+.btn-compare-add.in-compare {
+  background: #e74c3c;
+  color: #fff;
+  border-color: #e74c3c;
+}
+
+.btn-compare-add.in-compare:hover {
+  background: #c0392b;
+  border-color: #c0392b;
+}
+
+.phone-item:hover {
+  border-color: #4361ee;
+  background: #f8f9ff;
+}
+
+.phone-item.active {
+  border-color: #4361ee;
+  background: #eef1ff;
+}
+
+.phone-item .phone-size {
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.phone-item .phone-inch {
+  font-size: 12px;
+  color: #4361ee;
+  font-weight: 500;
+}
+
+.phone-fold-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.phone-fold-tag.folded {
+  background: #fce4ec;
+  color: #c62828;
+}
+
+.divider {
+  text-align: center;
+  color: #ccc;
+  font-size: 13px;
+  margin: 20px 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+.custom-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-row label {
+  min-width: 36px;
+  font-size: 13px;
+  color: #666;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-row input:focus {
+  border-color: #4361ee;
+}
+
+.input-row span {
+  font-size: 12px;
+  color: #999;
+  min-width: 20px;
+}
+
+/* 右侧展示区 */
+.display-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow: auto;
+}
+
+.phone-wrapper {
+  position: relative;
+  transition: width 0.3s, height 0.3s;
+}
+
+.phone-outline {
+  border: 3px solid #1a1a2e;
+  border-radius: 20px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transition: width 0.3s, height 0.3s;
+}
+
+.phone-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.phone-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.phone-dim {
+  font-size: 12px;
+  color: #999;
+}
+
+.placeholder {
+  color: #ccc;
+  font-size: 15px;
+}
+
+/* 对比容器 */
+.compare-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.compare-outline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 2px dashed;
+  border-radius: 20px;
+  pointer-events: none;
+  transition: width 0.3s, height 0.3s;
+}
+
+.compare-label {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* 对比托盘 */
+.compare-tray {
+  position: fixed;
+  bottom: 0;
+  left: 340px;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 50;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.compare-items {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.compare-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 2px solid;
+  border-radius: 16px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: #333;
+}
+
+.compare-tag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.compare-tag-remove {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.compare-tag-remove:hover {
+  color: #e74c3c;
+}
+
+.btn-compare-clear {
+  padding: 4px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 12px;
+  color: #999;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.btn-compare-clear:hover {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+/* 手机端彩蛋 */
+.mobile-block {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  text-align: center;
+  color: #fff;
+  padding: 32px;
+}
+
+.mobile-block-inner h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.mobile-block-inner p {
+  font-size: 15px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.mobile-emoji {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.mobile-hint {
+  margin-top: 20px;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.btn-lang-mobile {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.btn-lang-mobile:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+
+/* Toast 提示 */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: #e74c3c;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 200;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .app-body {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .control-panel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .display-area {
+    min-height: 500px;
+  }
+
+  .modal {
+    padding: 24px;
+    margin: 16px;
+  }
+}

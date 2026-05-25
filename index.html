@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手机尺寸可视化</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 手机端彩蛋 -->
+  <div class="mobile-block" id="mobileBlock" style="display:none;">
+    <button class="btn-lang btn-lang-mobile" id="langBtnMobile">中/EN</button>
+    <div class="mobile-block-inner">
+      <div class="mobile-emoji">📱</div>
+      <h2 data-i18n="m_title1">什么情况</h2>
+      <h2 data-i18n="m_title2"> 你在手机上查看手机尺寸？！</h2>
+      <p data-i18n="m_desc">兄弟，你手上拿的那个就是手机啊</p>
+      <p class="mobile-hint" data-i18n="m_hint">请用电脑或笔记本打开本站</p>
+    </div>
+  </div>
+
+  <!-- 校准弹窗 -->
+  <div class="modal-overlay" id="calibrationModal">
+    <div class="modal">
+      <button class="btn-lang" id="langBtnModal">中/EN</button>
+      <!-- 第一层：你知道 PPI 吗 -->
+      <div class="step active" id="step1">
+        <h2 data-i18n="s1_title">我们需要知道你屏幕的 PPI</h2>
+        <p class="modal-desc" data-i18n="s1_desc">屏幕像素密度（PPI）决定了显示的真实物理尺寸，我们需要这个值来还原手机实际大小。</p>
+        <div class="step-choices">
+          <button class="choice-btn" id="iKnowBtn">
+            <span class="choice-title" data-i18n="s1_know">我知道</span>
+            <span class="choice-desc" data-i18n="s1_know_desc">直接输入 PPI</span>
+          </button>
+          <button class="choice-btn" id="iDontKnowBtn">
+            <span class="choice-title" data-i18n="s1_dont_know">我不知道</span>
+            <span class="choice-desc" data-i18n="s1_dont_know_desc">帮你计算 PPI</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2a：直接输入 PPI -->
+      <div class="step" id="step-know">
+        <button class="btn-back" id="backFromKnow" data-i18n="back">← 返回</button>
+        <h2 data-i18n="sk_title">输入你的屏幕 PPI</h2>
+        <p class="modal-desc" data-i18n="sk_desc">可以在屏幕参数页面或 displaySpecifications 网站查到。</p>
+        <div class="input-group">
+          <input type="number" id="ppiInput" data-i18n-placeholder="sk_placeholder" placeholder="例如 220" step="1" min="50" max="1000">
+          <span class="input-unit">PPI</span>
+        </div>
+        <button class="btn-primary" id="ppiConfirm" data-i18n="confirm">确认</button>
+      </div>
+
+      <!-- 2b：帮你计算 PPI -->
+      <div class="step" id="step-calc">
+        <button class="btn-back" id="backFromCalc" data-i18n="back">← 返回</button>
+        <h2 data-i18n="sc_title">帮你计算 PPI</h2>
+        <p class="modal-desc" data-i18n="sc_desc">选择一种方式来获取你的屏幕 PPI。</p>
+
+        <div class="calibration-tabs">
+          <button class="tab-btn active" data-tab="screenSize" data-i18n="tab_screen">输入屏幕尺寸</button>
+          <button class="tab-btn" data-tab="cardCalibrate" data-i18n="tab_card">银行卡校准</button>
+        </div>
+
+        <!-- 路径1：输入屏幕尺寸 -->
+        <div class="tab-content active" id="tab-screenSize">
+          <div class="screen-size-input">
+            <label data-i18n="screen_label">你的屏幕对角线尺寸是</label>
+            <div class="input-group">
+              <input type="number" id="screenInchInput" data-i18n-placeholder="screen_placeholder" placeholder="例如 15.6" step="0.1" min="5" max="100">
+              <span class="input-unit" data-i18n="inch">英寸</span>
+            </div>
+            <button class="btn-primary" id="screenSizeConfirm" data-i18n="confirm">确认</button>
+          </div>
+        </div>
+
+        <!-- 路径2：银行卡校准 -->
+        <div class="tab-content" id="tab-cardCalibrate">
+          <p class="calibrate-hint" data-i18n="card_hint">请将银行卡（长 85.6mm）贴在屏幕上，拖动滑块使下方卡片与实物重合。</p>
+          <div class="card-preview" id="cardPreview">
+            <span data-i18n="card_name">银行卡</span>
+          </div>
+          <div class="slider-group">
+            <input type="range" id="cardSlider" min="100" max="600" value="300">
+            <span class="slider-value" id="sliderValue">300px</span>
+          </div>
+          <button class="btn-primary" id="cardConfirm" data-i18n="card_confirm">确认校准</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主界面 -->
+  <div class="main-app" id="mainApp" style="display:none;">
+    <header>
+      <h1 data-i18n="title">手机尺寸可视化</h1>
+      <div class="header-info">
+        <button class="btn-rotate" id="rotateBtn" style="display:none;" data-i18n="rotate_landscape">切换横屏</button>
+        <span class="ppi-display"><span data-i18n="ppi_label">当前 PPI</span>: <strong id="ppiValue">-</strong></span>
+        <button class="btn-re calibrate" id="recalibrateBtn" data-i18n="recalibrate">重新校准</button>
+        <button class="btn-lang" id="langBtnHeader">中/EN</button>
+      </div>
+    </header>
+
+    <div class="app-body">
+      <!-- 左侧控制区 -->
+      <aside class="control-panel">
+        <div class="control-section">
+          <h3 data-i18n="select_phone">选择常见手机</h3>
+          <div class="brand-tabs" id="brandTabs"></div>
+          <input type="text" class="search-input" id="phoneSearch" data-i18n-placeholder="search_placeholder" placeholder="搜索手机型号...">
+          <div class="phone-list" id="phoneList"></div>
+        </div>
+
+        <div class="divider" data-i18n="or">或</div>
+
+        <div class="control-section">
+          <h3 data-i18n="custom_size">自定义尺寸</h3>
+          <div class="custom-inputs">
+            <div class="input-row">
+              <label data-i18n="width">宽度</label>
+              <input type="number" id="customWidth" placeholder="71.5" step="0.1">
+              <span>mm</span>
+            </div>
+            <div class="input-row">
+              <label data-i18n="height">高度</label>
+              <input type="number" id="customHeight" placeholder="152.8" step="0.1">
+              <span>mm</span>
+            </div>
+            <button class="btn-primary" id="customConfirm" data-i18n="display">显示</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 右侧展示区 -->
+      <main class="display-area">
+        <div class="phone-wrapper" id="phoneWrapper">
+          <div class="phone-outline" id="phoneOutline" style="display:none;">
+            <div class="phone-screen">
+              <span class="phone-label" id="phoneLabel"></span>
+              <span class="phone-dim" id="phoneDim"></span>
+            </div>
+          </div>
+          <div class="compare-container" id="compareContainer"></div>
+          <div class="placeholder" id="placeholder">
+            <p data-i18n="placeholder">请先校准屏幕，然后选择手机或输入尺寸</p>
+          </div>
+        </div>
+        <div class="compare-tray" id="compareTray" style="display:none;">
+          <div class="compare-items" id="compareItems"></div>
+          <button class="btn-compare-clear" id="compareClear" data-i18n="compare_clear">清空对比</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <noscript>
+    <style>
+      .modal-overlay, .mobile-block { display: none !important; }
+      .noscript-msg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+        padding: 32px;
+        font-family: sans-serif;
+        color: #666;
+      }
+    </style>
+    <div class="noscript-msg">
+      <div>
+        <p style="font-size:48px;margin-bottom:16px;">📱</p>
+        <h2 style="color:#1a1a2e;margin-bottom:8px;">请启用 JavaScript</h2>
+        <p>本工具需要 JavaScript 来计算和渲染手机真实尺寸</p>
+      </div>
+    </div>
+  </noscript>
+  <div class="toast" id="toast"></div>
+  <script src="phones.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
