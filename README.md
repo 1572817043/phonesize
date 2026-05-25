@@ -1,5 +1,11 @@
 # Phone Size Visualizer
 
+、、、
+访问网址：
+https://phonesize-six.vercel.app/
+https://phonesize.pages.dev/
+、、、
+
 > 在电脑屏幕上以真实物理尺寸渲染手机大小的纯前端工具。
 
 ## 核心原理
